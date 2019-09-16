@@ -1,0 +1,104 @@
+<?php
+$params = array_merge(
+    require(__DIR__ . '/params.php'),
+    require(__DIR__ . '/params-local.php')
+);
+
+return [
+    'id' => 'app-backend',
+    'name' => '公益',
+    'basePath' => dirname(__DIR__),
+    'controllerNamespace' => 'app\controllers',
+    'bootstrap' => ['log'],
+    'language' => 'zh-CN',
+
+    'components' => [
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'fileMap' => [
+                        'app' => 'yii.php',
+                        'app/error' => 'error.php',
+                    ],
+
+                ],
+            ],
+        ],
+        'db' => require(__DIR__ . '/db.php'),
+        'request' => [
+            'csrfParam' => '_csrf-backend',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+                'text/json' => 'yii\web\JsonParser',
+            ]
+        ],
+//        'user' => [
+//            'class'           => 'backend\components\User',
+//            'identityClass'   => 'dektrium\user\Models\User',
+//            'enableAutoLogin' => true,
+//        ],
+        'session' => [
+            'class' => 'yii\web\Session',
+        ],
+        'errorHandler' => [
+            'errorAction' => 'site/error',
+        ],
+//        'i18n' => [
+//            'translations' => [
+//                'yii' => [
+//                    'class' => 'yii\i18n\PhpMessageSource',
+//                    'basePath' => '@app/messages',
+//                ],
+//            ],
+//        ],
+        'assetManager' => [
+            'appendTimestamp' => true,
+            'forceCopy' => false,
+            'bundles' => [
+                'dmstr\web\AdminLteAsset' => [
+                    'css' => [
+                        '/css/AdminLTE.min.css',
+                    ],
+                ],
+            ],
+        ],
+        'urlManager' => [
+            'enablePrettyUrl'     => true,
+            'enableStrictParsing' => true,
+            'showScriptName'      => false,
+            'rules' => [
+                ''       => 'site/index',
+                'logout' => 'site/logout',
+                '<controller:[a-z-]+>' => '<controller>/index',
+                '<controller:[a-z-]+>/' => '<controller>/index',
+                '<controller:[a-z-]+>/<action:[a-z-]+>' => '<controller>/<action>',
+                '<controller:[a-z-]+>/<action:[a-z-]+>/<id:[0-9]+>' => '<controller>/<action>',
+                '<module:[a-z-]+>/<controller:[a-z-]+>/<action:[a-z-]+>' => '<module>/<controller>/<action>',
+            ],
+        ],
+        'urlManagerLogin' => [
+            'class'               => 'yii\web\urlManager',
+            'enablePrettyUrl'     => true,
+            'enableStrictParsing' => true,
+            'showScriptName'      => false,
+            'rules' => [
+                'login'   => 'site/login',
+                'logout'  => 'site/logout',
+            ],
+        ],
+
+        'user' => [
+            'class'           => 'app\components\User',
+            'identityClass'   => 'app\models\BaseUser',
+            'enableAutoLogin' => true,
+            'loginUrl'        => ['site/login'],
+            'identityCookie'  => [
+                'name'     => '_identity',
+                'httpOnly' => true,
+            ],
+        ],
+    ],
+    'params' => $params,
+];
