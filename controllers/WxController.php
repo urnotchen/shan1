@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\QueryParamAuth;
 use app\models\User;
 use app\common\helpers\Curl;
 
@@ -10,10 +11,14 @@ use Yii;
 
 class WxController extends Controller
 {
+
     const SCOPE = 'snsapi_userinfo';
     const REDIRECT_URI = 'http://47.99.46.80/index.php';
     const APP_ID = 'wx8d771bff3c8c1eaf';
     const APP_SECRET = '0336ad17025337ad17193f079d6da8e8';
+
+
+
 
     /*
      * 微信请求授权

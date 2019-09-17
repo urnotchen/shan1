@@ -173,7 +173,7 @@ class User extends ActiveRecord
         }
         $model->open_id = $open_id;
         $model->access_token = $access_token;
-        $model->expires_in = $expires_in;
+        $model->expires_in = $expires_in = time();
         $model->refresh_token = $refresh_token;
         $model->open_id = $open_id;
         if($userinfo){
@@ -183,6 +183,7 @@ class User extends ActiveRecord
                 'sex' => $userinfo['sex'],
                 'city' => $userinfo['city'],
                 'province' => $userinfo['province'],
+                'country' => $userinfo['country'],
             ]);
         }
         if(!$model->save()){

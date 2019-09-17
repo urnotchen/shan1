@@ -25,6 +25,7 @@ class AppAsset extends AssetBundle
         'css/AdminLTE.min.css',
     ];
     public $js = [
+        'js/weixin.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
