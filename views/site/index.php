@@ -1,4 +1,8 @@
-<?php
+content.php
+header.php
+left.php
+main.php
+main-login.php<?php
 
 /* @var $this yii\web\View */
 

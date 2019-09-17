@@ -2,10 +2,11 @@
 
 namespace app\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
 
-class User extends ActiveRecord implements \yii\web\IdentityInterface
+class User extends ActiveRecord
 {
     public $id;
     public $username;
@@ -46,10 +47,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['id', 'access_token', 'open_id', 'union_id', 'expires_in', 'nickname'], 'required'],
+            [[ 'access_token', 'open_id',], 'required'],
             [['id', 'expires_in', 'sex', 'created_at', 'updated_at'], 'integer'],
             [['donation_money'], 'number'],
-            [['access_token', 'open_id', 'union_id', 'nickname', 'province', 'city', 'country', 'img_url'], 'string', 'max' => 255],
+            [['access_token', 'refresh_token','open_id', 'union_id', 'nickname', 'province', 'city', 'country', 'img_url'], 'string', 'max' => 255],
             [['id'], 'unique'],
         ];
     }
@@ -149,15 +150,43 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password);
+
+//        return $this->password === $password;
     }
 
     public static function addMoney($user,$money){
         $user->money += $money;
         if(!$user->save()){
-            throw new Exception('add user money failed');
+            throw  new Exception('add user money failed');
         }
     }
+    public static function updateUser($open_id,$access_token, $expires_in, $refresh_token,$userinfo = null){
+        $model = self::findOne(['open_id' => $open_id]);
+        if(!$model){
+            $model = new self();
+            $model->open_id = $open_id;
+            $model->access_token = $access_token;
+            $model->expires_in = $expires_in;
+            $model->refresh_token = $refresh_token;
+            $model->open_id = $open_id;
+        }
+        if($userinfo){
+            $model->setAttributes([
+                'username' => $userinfo['nickname'],
+                'image' => $userinfo['headimgurl'],
+                'sex' => $userinfo['sex'],
+                'city' => $userinfo['city'],
+                'province' => $userinfo['province'],
+            ]);
+        }
+        if(!$model->save()){
+            throw new Exception(500,'数据库错误');
+        }
+        return $model;
+    }
+    /*
+     * 更新用户token
+     * */
 
-    pub
 }

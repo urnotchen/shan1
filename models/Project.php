@@ -22,9 +22,23 @@ use Yii;
  */
 class Project extends \yii\db\ActiveRecord
 {
+
+    const SEPARATOR = ' - ';
+
+
+    public $time_range;
+    public $created_at_range = [];
     /**
      * {@inheritdoc}
      */
+    public function behaviors()
+    {/*{{{*/
+        return [
+            'timestamp' => \yii\behaviors\TimestampBehavior::classname(),
+            'blameable' => \yii\behaviors\BlameableBehavior::classname(),
+        ];
+    }/*}}}*/
+
     public static function tableName()
     {
         return 'project';
@@ -36,15 +50,37 @@ class Project extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'title'], 'required'],
-            [['id', 'count', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['title'], 'required'],
+            [['id', 'count','begin_at','end_at','begin_at','end_at', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['content'], 'string'],
             [['expect_money', 'now_money'], 'number'],
             [['title', 'sub_title', 'receiver'], 'string', 'max' => 255],
-            [['id'], 'unique'],
+            [['time_range'],'validateRange'],
+
         ];
     }
 
+    public function validateRange($attr, $params)
+    {
+        if ($this->hasErrors()) var_dump($this->hasErrors());
+
+        $created_at = explode(self::SEPARATOR, $this->time_range);
+
+        if (!is_array($created_at) || count($created_at) != 2) {
+            $this->addError($attr, '时间格式错误.');
+            return false;
+        }
+        foreach ($created_at as $v) {
+            $time = strtotime($v);
+            if ($time === false) {
+                $this->addError($attr, '时间格式错误.');
+                break;
+            }
+            $temp[] = $time;
+        }
+        $this->begin_at = $temp[0];
+        $this->end_at = $temp[1];
+    }
     /**
      * {@inheritdoc}
      */
@@ -52,17 +88,19 @@ class Project extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Title',
-            'sub_title' => 'Sub Title',
-            'content' => 'Content',
-            'receiver' => 'Receiver',
-            'expect_money' => 'Expect Money',
-            'now_money' => 'Now Money',
-            'count' => 'Count',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'title' => '标题',
+            'sub_title' => '小标题',
+            'content' => '内容',
+            'receiver' => '接受者',
+            'expect_money' => '预期金额',
+            'now_money' => '实时金额',
+            'count' => '参与人数',
+            'begin_at' => '开始时间',
+            'end_at' => '结束时间',
+            'created_at' => '创建时间',
+            'created_by' => '创建者',
+            'updated_at' => '更新时间',
+            'updated_by' => '更新者',
         ];
     }
 }

@@ -59,7 +59,7 @@ class Team extends \yii\db\ActiveRecord
     public static function addDonation($user_id,$money,$donation_id,$product_id){
 
         $team = new self();
-        $team->leader_id = $leader_id;
+        $team->leader_id = $user_id;
         $team->product_id = $product_id;
         $team->donation_id = $donation_id;
         $team->money += $money;

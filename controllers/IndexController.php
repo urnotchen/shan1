@@ -35,7 +35,7 @@ class IndexController extends Controller
             //累加到个人表
             User::addMoney($user,$money);
             //写入团队表
-            Team::add($u)
+
 
 
         }catch (Exception $e){
