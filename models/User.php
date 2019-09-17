@@ -40,7 +40,12 @@ class User extends ActiveRecord
     {
         return 'user';
     }
-
+    public function behaviors()
+    {/*{{{*/
+        return [
+            'timestamp' => \yii\behaviors\TimestampBehavior::classname(),
+        ];
+    }/*}}}*/
     /**
      * {@inheritdoc}
      */
@@ -173,8 +178,8 @@ class User extends ActiveRecord
         $model->open_id = $open_id;
         if($userinfo){
             $model->setAttributes([
-                'username' => $userinfo['nickname'],
-                'image' => $userinfo['headimgurl'],
+                'nickname' => $userinfo['nickname'],
+                'img_url' => $userinfo['headimgurl'],
                 'sex' => $userinfo['sex'],
                 'city' => $userinfo['city'],
                 'province' => $userinfo['province'],
