@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\models\User;
-use common\helpers\Curl;
+use app\common\helpers\Curl;
 
 use yii\web\Controller;
 use Yii;
@@ -30,6 +30,7 @@ class WxController extends Controller
      * */
     public function actionGetCode($code)
     {
+
         $output = Curl::httpGet('https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . self::APP_ID . '&secret=' . self::APP_SECRET . '&code=' . $code . '&grant_type=authorization_code', true);
         $json = json_decode($output, true);
         //       var_dump($output);die;
