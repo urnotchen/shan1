@@ -165,12 +165,12 @@ class User extends ActiveRecord
         $model = self::findOne(['open_id' => $open_id]);
         if(!$model){
             $model = new self();
-            $model->open_id = $open_id;
-            $model->access_token = $access_token;
-            $model->expires_in = $expires_in;
-            $model->refresh_token = $refresh_token;
-            $model->open_id = $open_id;
         }
+        $model->open_id = $open_id;
+        $model->access_token = $access_token;
+        $model->expires_in = $expires_in;
+        $model->refresh_token = $refresh_token;
+        $model->open_id = $open_id;
         if($userinfo){
             $model->setAttributes([
                 'username' => $userinfo['nickname'],
