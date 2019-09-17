@@ -152,7 +152,7 @@ console.log(location.href.split('#')[0]);
     wx.ready(function () {      //需在用户可能点击分享按钮前就先调用
     wx.updateTimelineShareData({ 
         title: '分享abc', // 分享标题
-        link: 'http://39.108.230.44/iii.php', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
         imgUrl: 'http://mmbiz.qpic.cn/mmbiz_jpg/qCbSKFcQyqJ1PcvFlAvIYGib1RvoEEbaESyAV3ibseWrsOjoBoxOdeScNwz0QcAgWD12HSeFV5VT6vovibmCunKLw/0', // 分享图标
         success: function () {
           // 设置成功
@@ -162,7 +162,7 @@ console.log(location.href.split('#')[0]);
     wx.updateAppMessageShareData({ 
         title: '分享给朋友abc', // 分享标题
         desc: '这个是一个测试分享', // 分享描述
-        link: 'http://39.108.230.44/iii.php', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
         imgUrl: 'http://mmbiz.qpic.cn/mmbiz_jpg/qCbSKFcQyqJ1PcvFlAvIYGib1RvoEEbaESyAV3ibseWrsOjoBoxOdeScNwz0QcAgWD12HSeFV5VT6vovibmCunKLw/0', // 分享图标
         success: function () {
           alert('分享朋友成功');
@@ -176,8 +176,8 @@ function share(){
  wx.updateAppMessageShareData({ 
         title: '你好分享', // 分享标题
         desc: '测试分享描述', // 分享描述
-        link: 'http://39.108.230.44/iii.php', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: '', // 分享图标
+        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIYAEcqeJicLMH67P1Jibu3TKWIqyW6OGNHoicywiaciccLL9roojDVN5wFAd7QBXpntzg0YuAQ4AhoNCg/132', // 分享图标
         success: function () {
           // 设置成功
         }});
