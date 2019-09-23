@@ -34,6 +34,9 @@ return [
                 'text/json' => 'yii\web\JsonParser',
             ]
         ],
+        'timeFormatter' => [
+            'class' => 'app\components\TimeFormatter',
+        ],
 //        'user' => [
 //            'class'           => 'backend\components\User',
 //            'identityClass'   => 'dektrium\user\Models\User',

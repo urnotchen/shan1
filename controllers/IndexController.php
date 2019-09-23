@@ -8,7 +8,9 @@ use app\models\Project;
 use app\models\Team;
 use app\models\User;
 use app\common\helpers\Curl;
+use Yii;
 use yii\db\Exception;
+use yii\imagine\Image;
 use yii\web\Controller;
 use yii\db\Connection;
 
@@ -21,6 +23,13 @@ class IndexController extends Controller
 
     public function actionIndex($token = null){
 
+
+    }
+
+    public function actionProject($id,$token){
+
+        $this->layout= 'main1';
+        $project = Project::findOne($id);
         //获取基本access_token签名
         $access_token = Curl::httpGet("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".self::APP_ID."&secret=".self::APP_SECRET,true);
         $access_token = json_decode($access_token,true);
@@ -34,7 +43,16 @@ class IndexController extends Controller
 
         $str = "jsapi_ticket={$jsapi_ticket}&noncestr={$noncestr}&timestamp={$timestamp}&url={$url}";
         $str_sha1 = sha1($str);
-        return $this->render('index',[
+
+        return $this->render('project',[
+            'now_money' => $project->now_money,
+            'title' => $project->title,
+            'sub_title' => $project->sub_title,
+            'content' => $project->content,
+            'donations' => Donation::getDonationsById($id),
+            'count' => count(Donation::getDonationsByProject($id)),
+
+            'token' => $token,
             'app_id' => self::APP_ID,
             'timestamp' => $timestamp,
             'nonceStr' => $noncestr,
@@ -43,12 +61,10 @@ class IndexController extends Controller
 //            'jsApiList' => json_encode(['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone']),
         ]);
     }
-
-
     /*
      * 捐款
      * */
-    public function donate($access_token,$money,$product_id,$team = null,$comment = ''){
+    public function donate($access_token,$money,$product_id,$comment = ''){
 
 
         try{
@@ -59,15 +75,108 @@ class IndexController extends Controller
             Donation::add($user->id,$product_id,$team,$comment,$money);
             //累加到个人表
             User::addMoney($user,$money);
-            //写入团队表
 
 
-
-        }catch (Exception $e){
+        }catch (Exception $e) {
 
         }
 
+    }
 
+    public function actionQuickDonate($token = null,$project_id = null){
 
+            $model = new Donation();
+            if(\Yii::$app->request->isPost){
+                $transaction = Yii::$app->db->beginTransaction();
+                try{
+                    if ($model->load(\Yii::$app->request->post())&&$model->save()) {
+                        User::addMoney($model->user_id,$model->money);
+                        $transaction->commit();
+                        $this->generateCertificate($token,$model->id);
+                        return $this->redirect(['donate-success','token' => $token,'donation_id' => $model->id]);
+
+                        #如果是数据库保存失败 后期要加一个保存失败的跳转界面提示
+
+                    }
+                }catch (Exception $e) {
+                    $transaction->rollBack();
+                }
+
+                return $this->redirect(Yii::$app->request->referrer);
+
+            }
+
+            return $this->renderAjax('quick_donate',[
+                'model'=>$model,
+                'project_id' => $project_id,
+                'token' => $token,
+                'user_id' => User::findByOpenId($token)->id,
+            ]);
+    }
+
+    public function actionDonateSuccess($token,$donation_id){
+
+        $donation = Donation::findByDonationId($donation_id);
+        $user = User::findById($donation->user_id);
+        $project = Project::findById($donation->product_id);
+        $this->layout = 'main1';
+        return $this->render('donate_success',[
+            'tradeno' => $donation->tradeno,
+            'token' => $token,
+            'img_url' => $user->img_url,
+            'nickname' => $user->nickname,
+            'project_name' => $project->title,
+            'money' => $donation->money,
+
+        ]);
+    }
+
+    public function generateCertificate($token,$donation_id){
+
+        $donation = Donation::findByDonationId($donation_id);
+        $project = Project::findById($donation->product_id);
+        $user = User::findByOpenId($token);
+        $text1 = '你为['.$project->title.']成功捐助了['.$donation->money.']元。';
+        $count = ceil(mb_strlen($text1)/14);
+
+        $textOpt = ['color'=>'000','size'=>'30'];
+        $fontFile = Yii::getAlias('@webroot/font/GB2312.ttf');
+        $img = Image::text(Yii::getAlias('@webroot/img/jiangzhuang.jpg'), $donation->tradeno, $fontFile, [384, 256], $textOpt);
+        $img = Image::text($img, $user->nickname, $fontFile, [314, 348], $textOpt);
+//        $img = Image::text($img, $text1, $fontFile, [100, 427], $textOpt);
+
+        for($i = 1;$i < $count + 1;$i++){
+            $img = Image::text($img, mb_substr($text1,($i - 1)*14,14*$i), $fontFile, [100, 427 + 60*($i -1)], $textOpt);
+        }
+        $img = Image::text($img, "感谢您的付出,积水成川,以小", $fontFile, [100, 627], $textOpt);
+        $img = Image::text($img, "小善汇成大善帮助更多的人", $fontFile, [100, 687], $textOpt);
+        $img = Image::text($img, "齐齐哈尔市慈善总会", $fontFile, [350, 837], $textOpt);
+        $img = Image::text($img, date("Y年n月d日"), $fontFile, [420, 887], $textOpt)->save(Yii::getAlias('@webroot/img/jiangzhuang/'.$donation->tradeno.'.jpg'), ['quality' => 100]);
+    }
+
+    public function actionShowCertificate($token,$tradeno){
+
+        $user = User::findByOpenId($token);
+//        $donation = Donation::findByTradeno($tradono);
+
+        $this->layout = 'main1';
+        return $this->render('show_certificate',[
+            'src' => '/img/jiangzhuang/'.$tradeno.'.jpg',
+        ]);
+    }
+
+    public function actionGetDonations($donation_id,$project_id){
+        Yii::$app->response->format = 'json';
+        $donations =  Donation::getDonationsById($project_id,$donation_id);
+        $res = [];
+        foreach ($donations as $donation){
+            $temp['id'] = $donation['id'];
+            $temp['img_url'] = $donation->user->img_url;
+            $temp['nickname'] = $donation->user->nickname;
+            $temp['money'] = $donation['money'];
+            $temp['created_at'] = \Yii::$app->timeFormatter->humanReadable3($donation->created_at);
+            $res[] = $temp;
+       }
+        return $res;
     }
 }

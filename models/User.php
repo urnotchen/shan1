@@ -8,11 +8,8 @@ use yii\db\Exception;
 
 class User extends ActiveRecord
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
+
+
 
     /**
      * This is the model class for table "user".
@@ -32,7 +29,7 @@ class User extends ActiveRecord
      * @property int $created_at
      * @property int $updated_at
      */
-
+    public static $users = [];
     /**
      * {@inheritdoc}
      */
@@ -98,13 +95,32 @@ class User extends ActiveRecord
     public static function findIdentityByAccessToken($token, $type = null)
     {
         foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
+            if ($user['access_token'] === $token) {
                 return new static($user);
             }
         }
 
         return null;
     }
+
+    public static function findByOpenId($token)
+    {/*{{{*/
+
+        $res =  self::find()->where(['open_id' => $token])->one();
+        if(!$res)
+            return false;
+        return $res;
+    }/*}}}*/
+    public static function findById($id)
+    {/*{{{*/
+
+        $res =  self::findOne($id);
+        if(!$res)
+            return false;
+        return $res;
+    }/*}}}*/
+
+
 
     /**
      * Finds user by username
@@ -160,11 +176,13 @@ class User extends ActiveRecord
 //        return $this->password === $password;
     }
 
-    public static function addMoney($user,$money){
-        $user->money += $money;
+    public static function addMoney($user_id,$money){
+        $user = self::findById($user_id);
+        $user->donation_money += $money;
         if(!$user->save()){
             throw  new Exception('add user money failed');
         }
+
     }
     public static function updateUser($open_id,$access_token, $expires_in, $refresh_token,$userinfo = null){
         $model = self::findOne(['open_id' => $open_id]);

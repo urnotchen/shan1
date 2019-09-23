@@ -103,4 +103,9 @@ class Project extends \yii\db\ActiveRecord
             'updated_by' => '更新者',
         ];
     }
+    //todo 403 not login
+    public static function findById($id){
+
+       return  Project::findOne($id);
+    }
 }
