@@ -17,7 +17,7 @@ use yii\db\Connection;
 class IndexController extends Controller
 {
     const SCOPE = 'snsapi_userinfo';
-    const REDIRECT_URI = 'http://47.99.46.80/index.php';
+    const REDIRECT_URI = 'http://47.99.46.80/wx/get-code';
     const APP_ID = 'wx8d771bff3c8c1eaf';
     const APP_SECRET = '0336ad17025337ad17193f079d6da8e8';
 
@@ -29,7 +29,7 @@ class IndexController extends Controller
     public function actionProject($id,$token = null){
 
         if(!$token){
-            $this->redirect('/wx/premit-wx?redirect_uri=/index/project?id='.$id);
+            $this->redirect('/wx/premit-wx');
         }
         $this->layout= 'main1';
         $project = Project::findOne($id);

@@ -13,7 +13,7 @@ class WxController extends Controller
 {
 
     const SCOPE = 'snsapi_userinfo';
-    const REDIRECT_URI = 'http://47.99.46.80/index.php';
+    const REDIRECT_URI = 'http://47.99.46.80/wx/get-code';
     const APP_ID = 'wx8d771bff3c8c1eaf';
     const APP_SECRET = '0336ad17025337ad17193f079d6da8e8';
 
@@ -23,7 +23,7 @@ class WxController extends Controller
     /*
      * 微信请求授权
      * */
-    public function actionPremitWx($redirect_uri)
+    public function actionPremitWx($redirect_uri = self::REDIRECT_URI)
     {
         $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . self::APP_ID . '&redirect_uri=' . urlencode($redirect_uri) . '&response_type=code&scope=' . self::SCOPE . '&state=STATE#wechat_redirect';
         return $this->redirect($url);
@@ -60,7 +60,7 @@ class WxController extends Controller
 //            throw new HttpException(403,'数据库错误',ResponseCode::DATABASE_SAVE_FAILED);
         }
         //返回open_id,直接跳转到首页
-        $this->redirect(['index/index', 'token' => $json['openid']]);
+        $this->redirect(['index/project?id=3', 'token' => $json['openid']]);
     }
 
     public function actionIndex()
