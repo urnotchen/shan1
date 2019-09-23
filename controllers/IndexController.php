@@ -26,8 +26,11 @@ class IndexController extends Controller
 
     }
 
-    public function actionProject($id,$token){
+    public function actionProject($id,$token = null){
 
+        if(!$token){
+            $this->redirect('/wx/premit-wx?redirect_uri=/index/project?id='.$id);
+        }
         $this->layout= 'main1';
         $project = Project::findOne($id);
         //获取基本access_token签名
