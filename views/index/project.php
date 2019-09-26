@@ -206,7 +206,7 @@ function donate(){
 JS
 );
 $this->registerJs(<<<JS
-console.log(location.href.split('#')[0]);
+
     var app_id = $("#app_id").val();
     var signature = $("#signature").val();
     var timestamp = $("#timestamp").val();
@@ -237,14 +237,7 @@ console.log(location.href.split('#')[0]);
     
 $("#share").on('click',share);
 function share(){
- wx.updateTimelineShareData({ 
-        title: '你好分享', // 分享标题
-        desc: '测试分享描述', // 分享描述
-        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIYAEcqeJicLMH67P1Jibu3TKWIqyW6OGNHoicywiaciccLL9roojDVN5wFAd7QBXpntzg0YuAQ4AhoNCg/132', // 分享图标
-        success: function () {
-          // 设置成功
-        }});
+
 }
 JS
 );
