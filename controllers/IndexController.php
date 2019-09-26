@@ -13,6 +13,8 @@ use yii\db\Exception;
 use yii\imagine\Image;
 use yii\web\Controller;
 use yii\db\Connection;
+use Da\QrCode\QrCode;
+
 
 class IndexController extends Controller
 {
@@ -148,7 +150,18 @@ class IndexController extends Controller
 
         $textOpt = ['color'=>'000','size'=>'30'];
         $fontFile = Yii::getAlias('@webroot/font/GB2312.ttf');
-        $img = Image::text(Yii::getAlias('@webroot/img/jiangzhuang.jpg'), $donation->tradeno, $fontFile, [384, 256], $textOpt);
+
+        $qrCode = (new QrCode(Yii::$app->request->hostInfo."/index/project?id={$project->id}"))
+            ->setSize(120)
+            ->setMargin(5)
+            ->useForegroundColor(0,0,0);
+
+        $qrCode->writeFile(Yii::getAlias('@webroot/img/jiangzhuang/'. 'code.png')); // writer defaults to PNG when none is specified
+
+        $img = Image::watermark(Yii::getAlias('@webroot/img/jiangzhuang.jpg'),Yii::getAlias('@webroot/img/jiangzhuang/'. 'code.png'),[20,1060]);
+
+
+        $img = Image::text($img, $donation->tradeno, $fontFile, [384, 256], $textOpt);
         $img = Image::text($img, $user->nickname, $fontFile, [314, 348], $textOpt);
 //        $img = Image::text($img, $text1, $fontFile, [100, 427], $textOpt);
 
@@ -158,15 +171,19 @@ class IndexController extends Controller
         $img = Image::text($img, "感谢您的付出,积水成川,以小", $fontFile, [100, 627], $textOpt);
         $img = Image::text($img, "小善汇成大善帮助更多的人", $fontFile, [100, 687], $textOpt);
         $img = Image::text($img, "齐齐哈尔市慈善总会", $fontFile, [350, 837], $textOpt);
-        $img = Image::text($img, date("Y年n月d日"), $fontFile, [420, 887], $textOpt)->save(Yii::getAlias('@webroot/img/jiangzhuang/'.$donation->tradeno.'.jpg'), ['quality' => 100]);
+
+
+       $img = Image::text($img, date("Y年n月d日"), $fontFile, [420, 887], $textOpt)->save(Yii::getAlias('@webroot/img/jiangzhuang/'.$donation->tradeno.'.jpg'), ['quality' => 100]);
     }
 
 
 
     public function actionShowCertificate($token,$tradeno){
 
+
 //        $user = User::findByOpenId($token);
         $donation = Donation::findByTradeno($tradeno);
+        $project = Project::findById($donation->product_id);
         $user = User::findById($donation->user_id);
 
         if(!file_exists('@webroot/img/jiangzhuang/'.$tradeno)){
@@ -176,6 +193,8 @@ class IndexController extends Controller
 
         $this->layout = 'main1';
         return $this->render('show_certificate',[
+            'share_title' => "【{$project->title}】感谢{$user->nickname}的捐赠,献出一份爱心,托起一份希望",
+            'share_img' => $project->img_url,
             'src' => '/img/jiangzhuang/'.$tradeno.'.jpg',
         ]);
     }
