@@ -269,7 +269,7 @@ class Upload extends \xj\ueditor\actions\Upload {
         foreach ($source as $imgUrl) {
             //上传基本路径
             $config['uploadBasePath'] = $this->getUploadBasePath();
-            $item = new \xj\ueditor\actions\Uploader($imgUrl, $config, "remote");
+            $item = new Uploader($imgUrl, $config, "remote");
             $info = $item->getFileInfo();
             array_push($list, array(
                 "state" => $info["state"],

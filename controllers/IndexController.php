@@ -178,7 +178,7 @@ class IndexController extends Controller
 
 
 
-    public function actionShowCertificate($token,$tradeno){
+    public function actionShowCertificate($token=null,$tradeno){
 
 
 //        $user = User::findByOpenId($token);
@@ -190,12 +190,35 @@ class IndexController extends Controller
             $this->generateCertificate($user->open_id,$donation->id);
         }
 
+        if(!$token){
+            $this->redirect('/wx/premit-wx');
+        }
+        //获取基本access_token签名
+        $access_token = Curl::httpGet("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".self::APP_ID."&secret=".self::APP_SECRET,true);
+        $access_token = json_decode($access_token,true);
+        $res = Curl::httpGet("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$access_token['access_token']}&type=jsapi",true);
+        $ticket = json_decode($res,true);
+        $noncestr = 'Wm3WZYTPz0wzccnW';
+        $jsapi_ticket = $ticket['ticket'];
+        $timestamp = time();
+        $url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
+        $str = "jsapi_ticket={$jsapi_ticket}&noncestr={$noncestr}&timestamp={$timestamp}&url={$url}";
+        $str_sha1 = sha1($str);
 
         $this->layout = 'main1';
         return $this->render('show_certificate',[
             'share_title' => "【{$project->title}】感谢{$user->nickname}的捐赠,献出一份爱心,托起一份希望",
             'share_img' => $project->img_url,
             'src' => '/img/jiangzhuang/'.$tradeno.'.jpg',
+            'url' =>Yii::$app->request->hostInfo."/index/show-certificate?tradeno={$tradeno}",
+
+            'url' => $url,
+            'token' => $token,
+            'app_id' => self::APP_ID,
+            'timestamp' => $timestamp,
+            'nonceStr' => $noncestr,
+            'signature' => $str_sha1,
+            'jsapi_ticket' => $jsapi_ticket,
         ]);
     }
 

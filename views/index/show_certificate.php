@@ -8,7 +8,17 @@
         vertical-align: middle;
     }
 </style>
-
+<form>
+    <input type="hidden" id="share_title" value=<?php echo $share_title?> />
+    <input type="hidden" id="share_img" value=<?php echo $share_img?> />
+    <input type="hidden" id="token" value=<?php echo $token?> />
+    <input type="hidden" id="app_id" value=<?php echo $app_id?> />
+    <input type="hidden" id="timestamp" value=<?php echo $timestamp?> />
+    <input type="hidden" id="nonceStr" value=<?php echo $nonceStr?> />
+    <input type="hidden" id="signature" value=<?php echo $signature?> />
+    <input type="hidden" id="jsapi_ticket" value=<?php echo $jsapi_ticket?> />
+    <input type="hidden" id="url" value=<?php echo $url?> />
+</form>
 <img src=<?php echo $src;?> style='display: block; height: auto;max-width: 100%;'>
 
 <?php
@@ -30,6 +40,8 @@ $this->registerJs(<<<JS
     wx.ready(function () {      //需在用户可能点击分享按钮前就先调用
         var share_img = $("#share_img").val();
         var share_title = $("#share_title").val();
+        var url = $("#url").val();
+
         wx.updateTimelineShareData({
         title: share_title, // 分享标题
         link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
