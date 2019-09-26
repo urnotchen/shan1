@@ -46,7 +46,8 @@ class IndexController extends Controller
 
         $str = "jsapi_ticket={$jsapi_ticket}&noncestr={$noncestr}&timestamp={$timestamp}&url={$url}";
         $str_sha1 = sha1($str);
-
+        $share_title = "和我一起关注【$project->title】公益计划,动动手指,让爱心传遍龙江大地";
+        $share_img = "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIYAEcqeJicLMH67P1Jibu3TKWIqyW6OGNHoicywiaciccLL9roojDVN5wFAd7QBXpntzg0YuAQ4AhoNCg/132";
         return $this->render('project',[
             'now_money' => $project->now_money,
             'title' => $project->title,
@@ -55,6 +56,8 @@ class IndexController extends Controller
             'donations' => Donation::getDonationsById($id),
             'count' => count(Donation::getDonationsByProject($id)),
 
+            'share_title' => $share_title,
+            'share_img' => $share_img,
             'token' => $token,
             'app_id' => self::APP_ID,
             'timestamp' => $timestamp,
@@ -94,6 +97,7 @@ class IndexController extends Controller
                 try{
                     if ($model->load(\Yii::$app->request->post())&&$model->save()) {
                         User::addMoney($model->user_id,$model->money);
+                        Project::addMoney($project_id,$model->money);
                         $transaction->commit();
                         $this->generateCertificate($token,$model->id);
                         return $this->redirect(['donate-success','token' => $token,'donation_id' => $model->id]);
@@ -157,10 +161,18 @@ class IndexController extends Controller
         $img = Image::text($img, date("Y年n月d日"), $fontFile, [420, 887], $textOpt)->save(Yii::getAlias('@webroot/img/jiangzhuang/'.$donation->tradeno.'.jpg'), ['quality' => 100]);
     }
 
+
+
     public function actionShowCertificate($token,$tradeno){
 
-        $user = User::findByOpenId($token);
-//        $donation = Donation::findByTradeno($tradono);
+//        $user = User::findByOpenId($token);
+        $donation = Donation::findByTradeno($tradeno);
+        $user = User::findById($donation->user_id);
+
+        if(!file_exists('@webroot/img/jiangzhuang/'.$tradeno)){
+            $this->generateCertificate($user->open_id,$donation->id);
+        }
+
 
         $this->layout = 'main1';
         return $this->render('show_certificate',[

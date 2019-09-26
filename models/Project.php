@@ -108,4 +108,11 @@ class Project extends \yii\db\ActiveRecord
 
        return  Project::findOne($id);
     }
+
+    public static function addMoney($project_id,$money){
+
+        $project = self::findOne($project_id);
+        $project->now_money += $money;
+        $project->save();
+    }
 }

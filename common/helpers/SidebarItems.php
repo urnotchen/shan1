@@ -2,12 +2,14 @@
 
 namespace app\common\helpers;
 
+use Faker\Provider\Base;
 use Yii;
+use yii\base\BaseObject;
 use yii\base\Object;
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-class SidebarItems extends Object
+class SidebarItems extends BaseObject
 {
 
     private static $_items = [];
@@ -18,7 +20,7 @@ class SidebarItems extends Object
     {/*{{{*/
         parent::init();
 
-        $this->_items = $this->defaultItem;
+//        $this->_items = $this->defaultItem;
     }/*}}}*/
 
     public static function getItems()

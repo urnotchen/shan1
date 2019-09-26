@@ -2,11 +2,11 @@
     <div class="sidebar-block"></div>
     <section class="sidebar">
 
-<!--        --><?//= \bluelive\adminlte\widgets\Nav::widget([
-//            'encodeLabels' => false,
-//            'options' => ['class' => 'sidebar-menu'],
-//            'items' => \Yii::$app->sidebarItems->getItems()
-//        ]); ?>
+        <?= \app\common\helpers\Nav::widget([
+            'encodeLabels' => false,
+            'options' => ['class' => 'sidebar-menu'],
+            'items' => \Yii::$app->sidebarItems->getItems()
+        ]); ?>
 
     </section>
 

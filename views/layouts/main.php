@@ -5,31 +5,30 @@
 
 use yii\helpers\Html;
 
-if ( in_array(Yii::$app->controller->action->id, ['login', 'error']) && Yii::$app->getUser()->isGuest) :
 
-    echo $this->render('main-login', [
-        'content' => $content
-    ]);
-else :
+    if (in_array(Yii::$app->controller->action->id, ['login', 'error']) && Yii::$app->getUser()->isGuest) {
 
-    // 检查账号状态
-//    if (! Yii::$app->getUser()->checkStatus()) {
-//        Yii::$app->getUser()->logout();
-//
-//        return Yii::$app->controller->redirect(
-//            Yii::$app->getUser()->loginUrl . '?return_url=' . Yii::$app->getRequest()->getAbsoluteUrl()
-//        );
-//    }
+        echo $this->render('main-login', [
+            'content' => $content
+        ]);exit();
+    }else{
 
-//    \app\assets\AppAsset::register($this);
+        if ( Yii::$app->getUser()->isGuest) {
 
-    \dmstr\web\AdminLteAsset::register($this);
+            header("location:" . Yii::$app->user->loginUrl);
+            exit;
+        }
+    }
 
-    $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@bower/admin-lte/dist');
+        \app\assets\AppAsset::register($this);
 
-    $userIdentity = Yii::$app->getUser()->identity;
+        \dmstr\web\AdminLteAsset::register($this);
 
-    ?>
+        $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@bower/admin-lte/dist');
+
+        $userIdentity = Yii::$app->getUser()->identity;
+
+        ?>
 
     <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -52,7 +51,7 @@ else :
     <body class="<?= $bodyClass; ?>">
     <?php $this->beginBody() ?>
 
-    <div class="wrapper">
+    <div class="wrapper" style="background-color: #ECF0F5">
         <?= $this->render('header', [
                 'directoryAsset' => $directoryAsset,
                 'userIdentity'   => $userIdentity,
@@ -81,4 +80,4 @@ else :
     </html>
     <?php $this->endPage() ?>
 
-<?php endif; ?>
+<?php //endif; ?>

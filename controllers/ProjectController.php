@@ -2,9 +2,14 @@
 
 namespace app\controllers;
 
+use app\assets\AppAsset;
+use app\common\actions\Upload;
+use app\common\helpers\SidebarActiveWidget;
+use app\common\helpers\SidebarItems;
 use Yii;
 use app\models\Project;
 use app\models\search\tProjectSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,6 +19,44 @@ use yii\filters\VerbFilter;
  */
 class ProjectController extends Controller
 {
+
+    public function init()
+    {
+        parent::init();
+        /* 注入左侧栏分项 */
+
+        $this->on(\yii\base\Module::EVENT_BEFORE_ACTION, [$this, 'handleSidebarItems']);
+
+        Yii::configure(Yii::$app, [
+            'components' => [
+                'timeFormatter' => [
+                    'class' => 'app\components\TimeFormatter',
+                ],
+            ],
+        ]);
+    }
+    public function handleSidebarItems()
+    {
+
+
+        $items = SidebarItems::getItems();
+        $items[] = [
+            'label' => '<span class="fa fa-file-code-o"></span> 公益项目 ',
+            'url' => '/project/index',
+            'options' => [
+                'class' => SidebarActiveWidget::widget([
+                    'activeArr' => ['account-exam'],
+                    'activeControllerArr' => [
+                        'check',
+                    ],
+                ])
+            ],
+        ];
+
+
+        SidebarItems::setItems($items);
+
+    }
     /**
      * {@inheritdoc}
      */
@@ -26,9 +69,67 @@ class ProjectController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'password','create-pt','upload'],
+                        'allow' => true,
+                        'roles' => ['@'],
+//                        'matchCallback' => function ($rule, $action) {
+//                            return Yii::$app->getUser()->can(\backend\modules\rights\components\Rights::PERMISSION_USER_MANAGE);
+//                        },
+                    ],
+
+                ],
+            ],
         ];
     }
 
+    public function actions() {
+        return [
+            'upload' => [
+                'class' => Upload::className(),
+                'uploadBasePath' => '@webroot', //file system path ps:当前运行应用的 Web 入口目录
+                'uploadBaseUrl' => '@web', //web path @web ps:当前运行应用的根 URL
+                'csrf' => true, //csrf校验
+
+                'configPatch' => [
+                    'imageMaxSize' =>  2 * 1024 * 1024, //图片
+                    'scrawlMaxSize' => 500 * 1024, //涂鸦
+                    'catcherMaxSize' => 500 * 1024, //远程
+                    'videoMaxSize' => 1024 * 1024, //视频
+                    'fileMaxSize' => 1024 * 1024, //文件
+                    'imageManagerListPath' => '/', //图片列表
+                    'fileManagerListPath' => '/', //文件列表
+                ],
+
+                // OR Closure
+                'pathFormat' => [
+                    'imagePathFormat' => '/img/project/{yyyy}{mm}{dd}/{time}{rand:6}',
+                    'scrawlPathFormat' => '/uploads/images/{yyyy}{mm}{dd}/{time}{rand:6}',
+                    'snapscreenPathFormat' => '/uploads/images/{yyyy}{mm}{dd}/{time}{rand:6}',
+                    'catcherPathFormat' => '/uploads/images/{yyyy}{mm}{dd}/{time}{rand:6}',
+                    'videoPathFormat' => '/uploads/videos/{yyyy}{mm}{dd}/{time}{rand:6}',
+                    'filePathFormat' => '/uploads/files/{yyyy}{mm}{dd}/{time}{rand:6}',
+                ],
+                'configPatch' => [
+                    'imageManagerListPath' => 'uploads/images', //图片列表
+                    'fileManagerListPath' => 'uploads/images', //文件列表
+                ],
+
+                'beforeUpload' => function($action) {
+                    //throw new \yii\base\Exception('error message'); //break
+                },
+                'afterUpload' => function($action) {
+                    /*@var $action \xj\ueditor\actions\Upload */
+                    var_dump($action->result);
+
+
+                },
+            ],
+        ];
+    }
     /**
      * Lists all Project models.
      * @return mixed
@@ -89,7 +190,7 @@ class ProjectController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
+        $model->time_range = date("Y-m-m",$model->begin_at).' - '.date("Y-m-d",$model->end_at);
         return $this->render('update', [
             'model' => $model,
         ]);

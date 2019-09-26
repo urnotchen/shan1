@@ -38,7 +38,7 @@ use yii\widgets\ActiveForm;
     ); ?>
 
     <?= $form->field($model, 'content')->widget(\xj\ueditor\Ueditor::className(), [
-        'style' => 'width:540px;height:600px',
+        'style' => 'width:840px;height:600px',
         'renderTag' => true,
         'readyEvent' => 'console.log("ready")',
         'jsOptions' => [

@@ -58,6 +58,8 @@ use yii\helpers\Html;
 <div class="wrapper">
     <div class="content-wrapper sd" >
         <form>
+            <input type="hidden" id="share_title" value=<?php echo $share_title?> />
+            <input type="hidden" id="share_img" value=<?php echo $share_img?> />
             <input type="hidden" id="token" value=<?php echo $token?> />
             <input type="hidden" id="app_id" value=<?php echo $app_id?> />
             <input type="hidden" id="timestamp" value=<?php echo $timestamp?> />
@@ -85,7 +87,7 @@ use yii\helpers\Html;
                                 <h4 class="description-text">邀您一起做公益</h4>
                                 <h5>“每个人做一点点，世界就会改变很多”</h5><br/>
                                 <h5>已筹到</h5>
-                                <h4><b><?php echo $now_money ?></b></h4>
+                                <h4><b><?php echo $now_money ?>元</b></h4>
                                 <button  id="share" type="button" class="btn btn-primary btn-danger">分享</button>
                                 <button   type="button" class="btn btn-primary btn-danger donate">捐款</button></div>
 
@@ -219,25 +221,18 @@ console.log(location.href.split('#')[0]);
         jsApiList: ['updateTimelineShareData','updateAppMessageShareData','onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone'] // 必填，需要使用的JS接口列表
     });
     wx.ready(function () {      //需在用户可能点击分享按钮前就先调用
-    wx.updateTimelineShareData({ 
-        title: '分享abc', // 分享标题
-        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: 'http://mmbiz.qpic.cn/mmbiz_jpg/qCbSKFcQyqJ1PcvFlAvIYGib1RvoEEbaESyAV3ibseWrsOjoBoxOdeScNwz0QcAgWD12HSeFV5VT6vovibmCunKLw/0', // 分享图标
-        success: function () {
-          // 设置成功
-          console.log('设置成功123');
-        }
-    });
-    wx.updateAppMessageShareData({ 
-        title: '分享给朋友abc', // 分享标题
-        desc: '这个是一个测试分享', // 分享描述
-        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: 'http://mmbiz.qpic.cn/mmbiz_jpg/qCbSKFcQyqJ1PcvFlAvIYGib1RvoEEbaESyAV3ibseWrsOjoBoxOdeScNwz0QcAgWD12HSeFV5VT6vovibmCunKLw/0', // 分享图标
-        success: function () {
-          alert('分享朋友成功');
-        }
-        
-});
+        var share_img = $("#share_img").val();
+        var share_title = $("#share_title").val();
+        wx.updateTimelineShareData({ 
+            title: share_title, // 分享标题
+            link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: share_img, // 分享图标
+            success: function () {
+              // 设置成功
+              console.log('设置成功123');
+            }
+        });
+
     });
     
 $("#share").on('click',share);

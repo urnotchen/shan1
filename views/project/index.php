@@ -22,7 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php \app\common\widgets\BoxWidget::begin();?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
 
 

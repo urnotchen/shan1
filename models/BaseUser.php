@@ -153,4 +153,12 @@ class BaseUser extends \yii\db\ActiveRecord implements \yii\web\IdentityInterfac
     {
         // TODO: Implement getAuthKey() method.
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'username' => '用户名'
+        ];
+    }
 }

@@ -26,6 +26,9 @@ return [
                 ],
             ],
         ],
+        'sidebarItems' => [
+            'class' => 'app\common\helpers\SidebarItems',
+        ],
         'db' => require(__DIR__ . '/db.php'),
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -37,11 +40,16 @@ return [
         'timeFormatter' => [
             'class' => 'app\components\TimeFormatter',
         ],
-//        'user' => [
-//            'class'           => 'backend\components\User',
-//            'identityClass'   => 'dektrium\user\Models\User',
-//            'enableAutoLogin' => true,
-//        ],
+        'user' => [
+            'class'           => 'app\components\User',
+            'identityClass'   => 'app\models\BaseUser',
+            'enableAutoLogin' => true,
+            'loginUrl'        => ['site/login'],
+            'identityCookie'  => [
+                'name'     => '_identity',
+                'httpOnly' => true,
+            ],
+        ],
         'session' => [
             'class' => 'yii\web\Session',
         ],
