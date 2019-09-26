@@ -44,7 +44,7 @@ $this->registerJs(<<<JS
 
         wx.updateTimelineShareData({
         title: share_title, // 分享标题
-        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        link: url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
         imgUrl: share_img, // 分享图标
         success: function () {
    
