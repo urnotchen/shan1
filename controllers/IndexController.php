@@ -46,7 +46,7 @@ class IndexController extends Controller
 
         $str = "jsapi_ticket={$jsapi_ticket}&noncestr={$noncestr}&timestamp={$timestamp}&url={$url}";
         $str_sha1 = sha1($str);
-        $share_title = "和我一起关注【$project->title】公益计划,动动手指,让爱心传遍龙江大地";
+        $share_title = "和我一起关注【{$project->title}】公益计划,动动手指,让爱心传遍龙江大地";
         $share_img = "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIYAEcqeJicLMH67P1Jibu3TKWIqyW6OGNHoicywiaciccLL9roojDVN5wFAd7QBXpntzg0YuAQ4AhoNCg/132";
         return $this->render('project',[
             'now_money' => $project->now_money,

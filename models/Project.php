@@ -54,7 +54,7 @@ class Project extends \yii\db\ActiveRecord
             [['id', 'count','begin_at','end_at','begin_at','end_at', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['content'], 'string'],
             [['expect_money', 'now_money'], 'number'],
-            [['title', 'sub_title', 'receiver'], 'string', 'max' => 255],
+            [['title', 'sub_title', 'receiver','img_url'], 'string', 'max' => 255],
             [['time_range'],'validateRange'],
 
         ];
