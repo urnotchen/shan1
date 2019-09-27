@@ -13,6 +13,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
@@ -73,7 +74,7 @@ class ProjectController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'password','create-pt','upload'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'password','create-pt','upload','upload-img'],
                         'allow' => true,
                         'roles' => ['@'],
 //                        'matchCallback' => function ($rule, $action) {
@@ -123,7 +124,7 @@ class ProjectController extends Controller
                 },
                 'afterUpload' => function($action) {
                     /*@var $action \xj\ueditor\actions\Upload */
-                    var_dump($action->result);
+//                    gettype($action->result);
 
 
                 },
@@ -166,7 +167,11 @@ class ProjectController extends Controller
     public function actionCreate()
     {
         $model = new Project();
-
+//        $image =  UploadedFile::getInstance($model,'img_url');
+//        $ext = $image->getExtension();
+//        $imageName = time().rand(100,999).'.'.$ext;
+//        $image->saveAs('project/'.date("Ymd".$imageName);//设置图片的存储位置
+//        $model->img_url =
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -175,7 +180,19 @@ class ProjectController extends Controller
             'model' => $model,
         ]);
     }
+    public function actionUploadImg(){
 
+        $dir_base = "img/product/";     //文件上传根目录
+        //没有成功上传文件，报错并退出。
+        if (empty($_FILES['myfile'])) {
+            echo "die";
+            exit(0);
+        }
+
+        $filename = time().rand(11111,99999);
+
+        var_dump(move_uploaded_file($_FILES["myfile"]["tmp_name"], $dir_base . uniqid().strrchr($_FILES["myfile"]["name"],'.')));die;
+    }
     /**
      * Updates an existing Project model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -188,6 +205,7 @@ class ProjectController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
         $model->time_range = date("Y-m-m",$model->begin_at).' - '.date("Y-m-d",$model->end_at);

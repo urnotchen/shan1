@@ -11,12 +11,13 @@ use yii\widgets\ActiveForm;
 
 <div class="project-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'sub_title')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'img_url')->fileInput(['class' => 'inputfile']) ?>
 
 
     <?= $form->field($model, 'receiver')->textInput(['maxlength' => true]) ?>
@@ -69,3 +70,34 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$this->registerJs(<<<JS
+$(".inputfile").change(function(){
+
+         
+        
+         var data = new FormData();
+        data.append("myfile", document.getElementById("project-img_url").files[0]);
+         //为FormData对象添加数据
+        console.log(data);
+        
+         $.ajax({
+             url:'upload-img',
+             type:'POST',
+             data:data,
+             cache: false,
+             contentType: false,        //不可缺参数
+             processData: false,        //不可缺参数
+             success:function(data){
+                // alert(123);
+            },
+             error:function(){
+                 alert('上传出错');
+                 //$(".loading").hide();    //加载失败移除加载图片
+             }
+         });
+         });
+
+
+JS
+);

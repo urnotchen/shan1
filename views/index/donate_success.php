@@ -25,21 +25,20 @@
                 <li style="padding: 15px">
                     <h3>感谢你助力【<?php echo $project_name ?>】</h3>
                     <h3>此次捐出<span  style="color: red"><?php echo $money?></span>元</h3>
-                </li>
+                    </li>
 
-            </ul>
-        </div>
-    </div>
-</div>
-    <footer class="navbar-fixed-bottom">
-        <div class="container">
-            <div class="raw" style="padding: 5%">
-                <button class="btn btn-danger btn-lg" style="width: 45%">分享给好友</button>
-                <a href=show-certificate?token=<?php echo $token?>&tradeno=<?php echo $tradeno?>><button class="btn  btn-lg "style="width: 45%;float: right">查看捐赠证书</button></a>
-
+                    </ul>
             </div>
         </div>
-    </footer>
+</div>
+<footer class="navbar-fixed-bottom">
+    <div class="container">
+        <div class="raw" style="padding: 5%">
+            <button class="btn btn-danger btn-lg" style="width: 45%">分享给好友</button>
+            <a href=show-certificate?token=<?php echo $token?>&tradeno=<?php echo $tradeno?>><button class="btn  btn-lg "style="width: 45%;float: right">查看捐赠证书</button></a>
+            </div>
+    </div>
+</footer>
 
 <?php $this->endBody() ?></body></html><?php $this->endPage() ?>
 

@@ -157,6 +157,14 @@ use yii\helpers\Html;
 ]);
 echo '<div id="modal_add_donation_area"> </div>';
 \yii\bootstrap\Modal::end()?>
+<?php
+\yii\bootstrap\Modal::begin([
+    'header' => "<h2>{$title}</h2>",
+    'id'=>'modal_show_details',
+    'size'=>'modal-sm',
+]);
+echo '<div id="modal_show_details_area"> </div>';
+\yii\bootstrap\Modal::end()?>
 <?php $this->endBody() ?>
 </body>
 </html>
@@ -173,8 +181,11 @@ function getUrlParam(name) {
 
 $("#show_details").on("click",showDetails);
 function showDetails(){
-    window.open ('details.php','newwindow', 'height=100, width=400,top=0, left=0, toolbar=no, menubar=no,scrollbars=no, resizable=no,location=n o, status=no')
-};
+   var token =getUrlParam('token');
+    var project_id = getUrlParam('id');
+    $("#modal_show_details_area").load("/index/details?token="+token+"&project_id="+project_id);
+    $("#modal_show_details").modal();};
+
 $("#more_info").on("click",moreInfo);
 function moreInfo(){
     donation_id = $(this).attr("donation_id");

@@ -236,4 +236,15 @@ class IndexController extends Controller
        }
         return $res;
     }
+
+
+    public function actionDetails($token,$project_id){
+
+        $this->layout = 'main1';
+        $project = Project::findById($project_id);
+        return $this->render('details',[
+            'content' => $project->content
+        ]);
+    }
+
 }

@@ -6,11 +6,11 @@ use Yii;
 use yii\helpers\Json;
 use yii\base\Action;
 
-class Upload extends \xj\ueditor\actions\Upload {
+class Upload extends Action {
 
     /**
      * 上传基本目录
-     * @var string
+     * @var string 
      */
     public $uploadBasePath = '@webroot/upload';
     public $uploadBaseUrl = '@web/upload';
@@ -18,17 +18,17 @@ class Upload extends \xj\ueditor\actions\Upload {
 
     /**
      *
-    {filename} 会替换成原文件名,配置这项需要注意中文乱码问题
-    {rand:6} 会替换成随机数,后面的数字是随机数的位数
-    {time} 会替换成时间戳
-    {yyyy} 会替换成四位年份
-    {yy} 会替换成两位年份
-    {mm} 会替换成两位月份
-    {dd} 会替换成两位日期
-    {hh} 会替换成两位小时
-    {ii} 会替换成两位分钟
-    {ss} 会替换成两位秒
-    非法字符 \ : * ? " < > |
+      {filename} 会替换成原文件名,配置这项需要注意中文乱码问题
+      {rand:6} 会替换成随机数,后面的数字是随机数的位数
+      {time} 会替换成时间戳
+      {yyyy} 会替换成四位年份
+      {yy} 会替换成两位年份
+      {mm} 会替换成两位月份
+      {dd} 会替换成两位日期
+      {hh} 会替换成两位小时
+      {ii} 会替换成两位分钟
+      {ss} 会替换成两位秒
+      非法字符 \ : * ? " < > |
      * @var type
      */
     public $pathFormat = [
@@ -48,14 +48,14 @@ class Upload extends \xj\ueditor\actions\Upload {
 
     /**
      * config.json to Array
-     * @var array
+     * @var array 
      */
     public $config = [];
     public $action; //request action name
     public $jsonpCallback; //jsonp name
     /**
      * 当前目录
-     * @var string
+     * @var string 
      */
     public $currentPath;
 
@@ -102,7 +102,7 @@ class Upload extends \xj\ueditor\actions\Upload {
                 $result = htmlspecialchars($this->jsonpCallback) . '(' . $result . ')';
             } else {
                 $result = Json::encode(array(
-                    'state' => 'jsonpCallback参数不合法'
+                            'state' => 'jsonpCallback参数不合法'
                 ));
             }
         }
@@ -189,11 +189,11 @@ class Upload extends \xj\ueditor\actions\Upload {
 
             /* 上传图片 */
             case 'uploadimage':
-                /* 上传涂鸦 */
+            /* 上传涂鸦 */
             case 'uploadscrawl':
-                /* 上传视频 */
+            /* 上传视频 */
             case 'uploadvideo':
-                /* 上传文件 */
+            /* 上传文件 */
             case 'uploadfile':
 
                 $result = $this->actionUpload($CONFIG);
@@ -202,7 +202,7 @@ class Upload extends \xj\ueditor\actions\Upload {
 
             /* 列出图片 */
             case 'listimage':
-                /* 列出文件 */
+            /* 列出文件 */
             case 'listfile':
                 $result = $this->actionList($CONFIG);
                 break;
@@ -214,7 +214,7 @@ class Upload extends \xj\ueditor\actions\Upload {
 
             default:
                 $result = Json::encode(array(
-                    'state' => '请求地址出错'
+                            'state' => '请求地址出错'
                 ));
                 break;
         }
@@ -283,8 +283,8 @@ class Upload extends \xj\ueditor\actions\Upload {
 
         /* 返回抓取数据 */
         return Json::encode(array(
-            'state' => count($list) ? 'SUCCESS' : 'ERROR',
-            'list' => $list
+                    'state' => count($list) ? 'SUCCESS' : 'ERROR',
+                    'list' => $list
         ));
     }
 
@@ -318,10 +318,10 @@ class Upload extends \xj\ueditor\actions\Upload {
         $files = $this->getfiles($path, $allowFiles);
         if (!count($files)) {
             return Json::encode(array(
-                "state" => "no match file",
-                "list" => array(),
-                "start" => $start,
-                "total" => count($files)
+                        "state" => "no match file",
+                        "list" => array(),
+                        "start" => $start,
+                        "total" => count($files)
             ));
         }
 
@@ -337,10 +337,10 @@ class Upload extends \xj\ueditor\actions\Upload {
 
         /* 返回数据 */
         $result = Json::encode(array(
-            "state" => "SUCCESS",
-            "list" => $list,
-            "start" => $start,
-            "total" => count($files)
+                    "state" => "SUCCESS",
+                    "list" => $list,
+                    "start" => $start,
+                    "total" => count($files)
         ));
 
         return $result;
@@ -398,8 +398,9 @@ class Upload extends \xj\ueditor\actions\Upload {
         //上传基本路径
         $config['uploadBasePath'] = $this->getUploadBasePath();
 
-//        $up = new \xj\ueditor\actions\Uploader($fieldName, $config, $base64);
+        /* 生成上传实例对象并完成上传 */
         $up = new Uploader($fieldName, $config, $base64);
+
         /**
          * 得到上传文件所对应的各个参数,数组结构
          * array(
@@ -413,10 +414,13 @@ class Upload extends \xj\ueditor\actions\Upload {
          */
         /* 返回数据 */
         $result = $up->getFileInfo();
+
         if (isset($result['url'])) {
             $result['relativePath'] = $result['url'];
 //            $result['url'] = $this->getUploadBaseUrl($result['url']);
+            $result['url'] = $result['url'];
         }
+
         //set to public for callback
         $this->result = $result;
         if ($result['state'] == 'SUCCESS') {
@@ -451,7 +455,7 @@ class Upload extends \xj\ueditor\actions\Upload {
                 } else {
                     if (preg_match("/\.(" . $allowFiles . ")$/i", $file)) {
                         $files[] = array(
-                            'url' => substr($path2, strlen($this->getUploadBasePath())),
+                            'url' => $this->getUploadBaseUrl(substr($path2, strlen($this->getUploadBasePath()))),
                             'mtime' => filemtime($path2)
                         );
                     }

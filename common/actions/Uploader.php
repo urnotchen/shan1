@@ -2,8 +2,6 @@
 
 namespace app\common\actions;
 
-use Yii;
-
 /**
  * Created by JetBrains PhpStorm.
  * User: taoqili
@@ -11,7 +9,7 @@ use Yii;
  * Time: 上午11: 32
  * UEditor编辑器通用上传类
  */
-class Uploader extends \xj\ueditor\actions\Uploader{
+class Uploader {
 
     public $fileField; //文件域名
     public $file; //文件上传对象
@@ -72,7 +70,6 @@ class Uploader extends \xj\ueditor\actions\Uploader{
      * @return mixed
      */
     private function upFile() {
-//        var_dump($ret['code'] . $ret['message']);return;
         $file = $this->file = $_FILES[$this->fileField];
         if (!$file) {
             $this->stateInfo = $this->getStateInfo("ERROR_FILE_NOT_FOUND");
@@ -124,15 +121,6 @@ class Uploader extends \xj\ueditor\actions\Uploader{
         } else { //移动成功
             $this->stateInfo = $this->stateMap[0];
         }
-
-//        $ret = Yii::$app->qiniu->putFile(time(), $this->filePath);
-//        if ($ret['code'] === 0) {
-//            // 上传成功
-//            unlink($this->filePath);
-//            $this->fullName = $url = $ret['result']['url'];
-//        }
-////        $this->fullName=$ret['code'] . $ret['message'];
-
     }
 
     /**
@@ -172,14 +160,6 @@ class Uploader extends \xj\ueditor\actions\Uploader{
         } else { //移动成功
             $this->stateInfo = $this->stateMap[0];
         }
-
-        $ret = Yii::$app->qiniu->putFile(time(), $this->filePath);
-        if ($ret['code'] === 0) {
-            // 上传成功
-            unlink($this->filePath);
-            $this->fullName = $url = $ret['result']['url'];
-        }
-
     }
 
     /**
@@ -211,9 +191,9 @@ class Uploader extends \xj\ueditor\actions\Uploader{
         //打开输出缓冲区并获取远程图片
         ob_start();
         $context = stream_context_create(
-            array('http' => array(
-                'follow_location' => false // don't follow redirects
-            ))
+                array('http' => array(
+                        'follow_location' => false // don't follow redirects
+                    ))
         );
         readfile($imgUrl, false, $context);
         $img = ob_get_contents();
@@ -249,14 +229,6 @@ class Uploader extends \xj\ueditor\actions\Uploader{
         } else { //移动成功
             $this->stateInfo = $this->stateMap[0];
         }
-
-        $ret = Yii::$app->qiniu->putFile(time(), $this->filePath);
-        if ($ret['code'] === 0) {
-            // 上传成功
-            unlink($this->filePath);
-            $this->fullName = $url = $ret['result']['url'];
-        }
-
     }
 
     /**
@@ -303,7 +275,7 @@ class Uploader extends \xj\ueditor\actions\Uploader{
         $format = str_replace("{filename}", $oriName, $format);
 
         //替换随机字符串
-        $randNum = rand(1, 10000000000) . rand(1, 10000000000);
+        $randNum = rand(1, 10000000) . rand(1, 10000000);
         if (preg_match("/\{rand\:([\d]*)\}/i", $format, $matches)) {
             $format = preg_replace("/\{rand\:[\d]*\}/i", substr($randNum, 0, $matches[1]), $format);
         }
