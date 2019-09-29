@@ -88,7 +88,7 @@ use yii\helpers\Html;
                                 <h5>“每个人做一点点，世界就会改变很多”</h5><br/>
                                 <h5>已筹到</h5>
                                 <h4><b><?php echo $now_money ?>元</b></h4>
-                                <button  id="share" type="button" class="btn btn-primary btn-danger">分享</button>
+<!--                                <button  id="share" type="button" class="btn btn-primary btn-danger">分享</button>-->
                                 <button   type="button" class="btn btn-primary btn-danger donate">捐款</button></div>
 
                         </div>

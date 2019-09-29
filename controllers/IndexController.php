@@ -212,9 +212,9 @@ class IndexController extends Controller
             $this->generateCertificate($user->open_id,$donation->id);
         }
 
-        if(!$token){
-            $this->redirect('/wx/premit-wx');
-        }
+//        if(!$token){
+//            $this->redirect('/wx/premit-wx');
+//        }
         //获取基本access_token签名
         $access_token = Curl::httpGet("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".self::APP_ID."&secret=".self::APP_SECRET,true);
         $access_token = json_decode($access_token,true);
