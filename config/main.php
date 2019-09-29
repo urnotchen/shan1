@@ -31,7 +31,7 @@ return [
         ],
         'db' => require(__DIR__ . '/db.php'),
         'request' => [
-            'csrfParam' => '_csrf-backend',
+            'csrfParam' => '_csrf',
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
                 'text/json' => 'yii\web\JsonParser',
