@@ -95,6 +95,7 @@ class Project extends \yii\db\ActiveRecord
             'expect_money' => '预期金额',
             'now_money' => '实时金额',
             'count' => '参与人数',
+            'img_url' => '封面',
             'begin_at' => '开始时间',
             'end_at' => '结束时间',
             'created_at' => '创建时间',

@@ -182,16 +182,21 @@ class ProjectController extends Controller
     }
     public function actionUploadImg(){
 
-        $dir_base = "img/product/";     //文件上传根目录
-        //没有成功上传文件，报错并退出。
+        $dir_base = "img/project/".date("Ymd")."/";     //文件上传根目录
+        if (!is_dir($dir_base)) {
+            mkdir(iconv("UTF-8", "GBK", $dir_base),0777,true);
+        }
+            //没有成功上传文件，报错并退出。
         if (empty($_FILES['myfile'])) {
             echo "die";
             exit(0);
         }
 
-        $filename = time().rand(11111,99999);
+//        $filename = time().rand(11111,99999);
+        $filename = $dir_base . uniqid().strrchr($_FILES["myfile"]["name"],'.');
+        $res = move_uploaded_file($_FILES["myfile"]["tmp_name"], $filename);
 
-        var_dump(move_uploaded_file($_FILES["myfile"]["tmp_name"], $dir_base . uniqid().strrchr($_FILES["myfile"]["name"],'.')));die;
+        return '../'.$filename;
     }
     /**
      * Updates an existing Project model.
@@ -205,10 +210,9 @@ class ProjectController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
             return $this->redirect(['view', 'id' => $model->id]);
         }
-        $model->time_range = date("Y-m-m",$model->begin_at).' - '.date("Y-m-d",$model->end_at);
+        $model->time_range = date("Y-m-d",$model->begin_at).' - '.date("Y-m-d",$model->end_at);
         return $this->render('update', [
             'model' => $model,
         ]);

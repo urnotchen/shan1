@@ -16,9 +16,11 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'sub_title')->textInput(['maxlength' => true]) ?>
+    <img src=<?php echo $model->img_url ?> id="img_show" style="width: 100px;height: 100px;"alt='封面待上传'>
 
-    <?= $form->field($model, 'img_url')->fileInput(['class' => 'inputfile']) ?>
+    <input class="inputfile" id="pro-img_url" type="file">
 
+    <?= $form->field($model, 'img_url')->hiddenInput()->label(false) ?>
 
     <?= $form->field($model, 'receiver')->textInput(['maxlength' => true]) ?>
 
@@ -77,7 +79,7 @@ $(".inputfile").change(function(){
          
         
          var data = new FormData();
-        data.append("myfile", document.getElementById("project-img_url").files[0]);
+        data.append("myfile", document.getElementById("pro-img_url").files[0]);
          //为FormData对象添加数据
         console.log(data);
         
@@ -89,7 +91,8 @@ $(".inputfile").change(function(){
              contentType: false,        //不可缺参数
              processData: false,        //不可缺参数
              success:function(data){
-                // alert(123);
+                $("#img_show").attr("src",data);
+                $("#project-img_url").val(data);
             },
              error:function(){
                  alert('上传出错');
