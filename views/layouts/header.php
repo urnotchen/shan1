@@ -27,27 +27,20 @@ use yii\helpers\Html;
             ];
 
             $items[] = [
-                'text' => '电影',
-                'url' => ['/movie/movie/index'],
-                'activeModule' => 'movie',
+                'text' => '公益项目',
+                'url' => ['/project/index'],
+                'activeModule' => 'projecrt',
             ];
 
             $items[] = [
-                'text' => '统计',
-                'url' => ['/stat/stat/index'],
-                'activeModule' => 'stat',
+                'text' => '管理员',
+                'url' => ['/admin/index'],
+                'activeModule' => 'admin',
             ];
-
             $items[] = [
-                'text' => '用户',
-                'url' => ['/user/user/index'],
-                'activeModule' => 'user',
-            ];
-
-            $items[] = [
-                'text' => '设置',
-                'url' => ['/setting/misc/policy'],
-                'activeModule' => 'setting',
+                'text' => '用户管理',
+                'url' => ['/user/index'],
+                'activeModule' => 'admin',
             ];
 
             echo \app\common\widgets\TopMenu::widget(['items' => $items]);

@@ -45,7 +45,9 @@ class BaseUser extends \yii\db\ActiveRecord implements \yii\web\IdentityInterfac
 
         ];
     }/*}}}*/
-
+    public function hashPassword($attr){
+        $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->$attr);
+    }
 //    public static function getDb()
 //    {
 //        return \Yii::$app->dbUser;
