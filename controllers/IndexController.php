@@ -140,6 +140,7 @@ class IndexController extends Controller
         $timestamp = time();
         $url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
         $str = "jsapi_ticket={$jsapi_ticket}&noncestr={$noncestr}&timestamp={$timestamp}&url={$url}";
+        $str_sha1 = sha1($str);
 
         return $this->render('donate_success',[
             'tradeno' => $donation->tradeno,
