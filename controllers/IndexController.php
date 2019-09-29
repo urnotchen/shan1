@@ -149,6 +149,8 @@ class IndexController extends Controller
             'project_name' => $project->title,
             'money' => $donation->money,
 
+            'share_title' => "【{$project->title}】感谢{$user->nickname}的捐赠,献出一份爱心,托起一份希望",
+            'share_img' => $project->img_url,
             'url' =>Yii::$app->request->hostInfo."/index/show-certificate?tradeno={$donation->tradeno}",
             'token' => $token,
             'app_id' => self::APP_ID,

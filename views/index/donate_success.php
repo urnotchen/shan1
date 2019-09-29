@@ -5,6 +5,17 @@
          background-color: pink;
     }
 </style>
+    <form>
+        <input type="hidden" id="share_title" value=<?php echo $share_title?> />
+        <input type="hidden" id="share_img" value=<?php echo $share_img?> />
+        <input type="hidden" id="token" value=<?php echo $token?> />
+        <input type="hidden" id="app_id" value=<?php echo $app_id?> />
+        <input type="hidden" id="timestamp" value=<?php echo $timestamp?> />
+        <input type="hidden" id="nonceStr" value=<?php echo $nonceStr?> />
+        <input type="hidden" id="signature" value=<?php echo $signature?> />
+        <input type="hidden" id="jsapi_ticket" value=<?php echo $jsapi_ticket?> />
+        <input type="hidden" id="url" value=<?php echo $url?> />
+    </form>
 <!--<body background="../img/aixin_bg.jpg" style="background-size: cover">-->
 <div class="wrapper">
 <div class="col-md-4" style="margin-top: 50%">
