@@ -91,8 +91,8 @@ $(".inputfile").change(function(){
              contentType: false,        //不可缺参数
              processData: false,        //不可缺参数
              success:function(data){
-                $("#img_show").attr("src",data);
-                $("#project-img_url").val(data);
+                $("#img_show").attr("src", data['show_url']);
+                $("#project-img_url").val(data['base_url']);
             },
              error:function(){
                  alert('上传出错');

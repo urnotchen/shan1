@@ -45,7 +45,7 @@
 <footer class="navbar-fixed-bottom">
     <div class="container">
         <div class="raw" style="padding: 5%">
-            <button class="btn btn-danger btn-lg" style="width: 45%">分享给好友</button>
+            <button class="btn btn-danger btn-lg" style="width: 45%">分享到朋友圈</button>
             <a href=show-certificate?token=<?php echo $token?>&tradeno=<?php echo $tradeno?>><button class="btn  btn-lg "style="width: 45%;float: right">查看捐赠证书</button></a>
             </div>
     </div>

@@ -6,7 +6,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
-    'name' => '公益',
+    'name' => '齐齐哈尔慈善总会',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'app\controllers',
     'bootstrap' => ['log'],
