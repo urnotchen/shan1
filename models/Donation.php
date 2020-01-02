@@ -21,7 +21,7 @@ use yii\db\Exception;
 class Donation extends \yii\db\ActiveRecord
 {
     /**
-     * {@inheritdoc}
+     *  {@inheritdoc}
      */
     public static function tableName()
     {
